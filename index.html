@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teclabel - Configuração de Orçamentos</title> <!-- Título da Aba Atualizado -->
+    <title>Teclabel - Configuração de Orçamentos</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
@@ -13,71 +13,90 @@
             color: #1a1a1a; line-height: 1.6; -webkit-font-smoothing: antialiased;
             background: linear-gradient(-45deg, #fafafa, #f4f6f9, #ffffff, #f0f2f5);
             background-size: 400% 400%; animation: animateBackground 15s ease infinite;
+             /* *** ALTERAÇÃO 2: Prevenir Scroll Horizontal *** */
+            overflow-x: hidden; /* Evita que o body permita scroll lateral */
         }
         @keyframes animateBackground { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        header { background: #ffffff; padding: 1.5rem 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04); position: sticky; top: 0; z-index: 100; }
-        .logo-container { max-width: 1200px; margin: 0 auto; text-align: center; }
-        .logo-container img { height: 40px; transition: transform 0.3s ease; }
-        .logo-container img:hover { transform: scale(1.02); }
-        main { max-width: 800px; margin: 2rem auto; padding: 0 1rem; } /* Ajustado padding para mobile */
-        .main-logo { height: 140px; margin-bottom: 1.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.05)); transition: transform 0.3s ease; display: block; margin-left: auto; margin-right: auto; } /* Garantir centralização e display block */
+        /* ... (restante do CSS do header, logo-container, etc., permanece igual) ... */
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            /* *** ALTERAÇÃO 2b: Garantir que o main não cause scroll *** */
+            width: 100%; /* Ocupa a largura disponível */
+            overflow-x: hidden; /* Evita que conteúdo interno do main vaze */
+         }
+        .main-logo { height: 140px; margin-bottom: 1.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.05)); transition: transform 0.3s ease; display: block; margin-left: auto; margin-right: auto; }
         .main-logo:hover { transform: scale(1.03); }
-        h1 { font-size: 2.2rem; font-weight: 800; color: #022c71; margin-bottom: 0.5rem; letter-spacing: -0.02em; text-align: center; } /* Ajustado tamanho para mobile */
-        .subtitle { font-size: 1.1rem; color: #666; margin-bottom: 2.5rem; font-weight: 400; text-align: center; } /* Ajustado tamanho e margem */
+        h1 { font-size: 2.2rem; font-weight: 800; color: #022c71; margin-bottom: 0.5rem; letter-spacing: -0.02em; text-align: center; }
+        .subtitle { font-size: 1.1rem; color: #666; margin-bottom: 2.5rem; font-weight: 400; text-align: center; }
         .form-container { background: #ffffff; border-radius: 16px; padding: 2.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.02), 0 1px 3px rgba(0,0,0,0.04); }
-        .form-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.5rem; } /* Coluna única por padrão */
-        @media (min-width: 600px) { .form-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; } } /* Duas colunas em telas maiores */
+        .form-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+        @media (min-width: 600px) { .form-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; } }
         .form-group { display: flex; flex-direction: column; }
         .form-group.full-width { grid-column: 1 / -1; }
-        label { font-size: 0.8rem; font-weight: 600; color: #333; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; } /* Ajustado tamanho e cor */
-        input, select { padding: 0.8rem 1rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.95rem; font-family: inherit; background: #f9fafb; transition: all 0.2s ease; color: #1a1a1a; width: 100%; /* Garantir largura total */ } /* Ajustado padding, borda, tamanho fonte, bg */
+        label { font-size: 0.8rem; font-weight: 600; color: #333; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        input, select { padding: 0.8rem 1rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.95rem; font-family: inherit; background: #f9fafb; transition: all 0.2s ease; color: #1a1a1a; width: 100%; }
         input:focus, select:focus { outline: none; border-color: #022c71; background: #ffffff; box-shadow: 0 0 0 3px rgba(2, 44, 113, 0.1); }
-        select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%234b5563' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; } /* Cor da seta ajustada */
-        input::placeholder { color: #9ca3af; } /* Cor do placeholder ajustada */
-        .value-display { display: flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1rem; background: #f3f4f6; border-radius: 8px; margin-top: 0.5rem; } /* Ajustado padding e background */
-        .value-display .unit-value { font-size: 0.8rem; color: #4b5563; } /* Cor ajustada */
-        .unit-value span { font-weight: 600; color: #022c71; font-size: 0.95rem; } /* Tamanho ajustado */
-        button[type="submit"] { width: 100%; padding: 0.9rem 2rem; background: #022c71; color: #ffffff; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; margin-top: 1rem; letter-spacing: 0.02em; } /* Ajustado padding, tamanho fonte, margem */
+        select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%234b5563' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; }
+        input::placeholder { color: #9ca3af; }
+        .value-display { display: flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1rem; background: #f3f4f6; border-radius: 8px; margin-top: 0.5rem; }
+        .value-display .unit-value { font-size: 0.8rem; color: #4b5563; }
+        .unit-value span { font-weight: 600; color: #022c71; font-size: 0.95rem; }
+        button[type="submit"] { width: 100%; padding: 0.9rem 2rem; background: #022c71; color: #ffffff; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; margin-top: 1rem; letter-spacing: 0.02em; }
         button[type="submit"]:hover { background: #011f4b; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(2, 44, 113, 0.3); }
         button[type="submit"]:active { transform: translateY(0); }
-        .success-message { background: #e0f2fe; color: #0c4a6e; padding: 0.9rem 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; display: none; animation: slideIn 0.3s ease; border: 1px solid #bae6fd; } /* Ajustado cores, padding, borda */
+        .success-message { background: #e0f2fe; color: #0c4a6e; padding: 0.9rem 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; display: none; animation: slideIn 0.3s ease; border: 1px solid #bae6fd; }
         .success-message.show { display: block; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        /* Chatbot */
-        .chat-button { position: fixed; bottom: 1.5rem; right: 1.5rem; width: 56px; height: 56px; background: #022c71; border: none; border-radius: 50%; color: #ffffff; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.3s ease; z-index: 1000; animation: pulse 2s infinite; display: flex; align-items: center; justify-content: center; } /* Ajustado tamanho, posição, display */
+        /* ... (CSS do Chatbot permanece igual) ... */
+         .chat-button { position: fixed; bottom: 1.5rem; right: 1.5rem; width: 56px; height: 56px; background: #022c71; border: none; border-radius: 50%; color: #ffffff; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.3s ease; z-index: 1000; animation: pulse 2s infinite; display: flex; align-items: center; justify-content: center; }
         @keyframes pulse { 0%, 100% { transform: scale(1); box-shadow: 0 4px 12px rgba(0,0,0,0.15); } 50% { transform: scale(1.08); box-shadow: 0 6px 20px rgba(2, 44, 113, 0.4); } }
         .chat-button:hover { background: #011f4b; transform: scale(1.05); box-shadow: 0 6px 20px rgba(0,0,0,0.2); animation: none; }
-        .chat-bubble { position: fixed; bottom: 5.5rem; right: 1.5rem; background: #ffffff; padding: 0.8rem 1rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 250px; z-index: 999; animation: bubbleIn 0.5s ease; display: none; border: 1px solid #e5e7eb; } /* Ajustado padding, border-radius, max-width, borda */
+        .chat-bubble { position: fixed; bottom: 5.5rem; right: 1.5rem; background: #ffffff; padding: 0.8rem 1rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 250px; z-index: 999; animation: bubbleIn 0.5s ease; display: none; border: 1px solid #e5e7eb; }
         .chat-bubble.show { display: block; }
         @keyframes bubbleIn { from { opacity: 0; transform: translateY(10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        .chat-bubble::after { content: ''; position: absolute; bottom: -7px; right: 18px; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 8px solid #ffffff; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.05)); } /* Ajustado tamanho e sombra */
-        .chat-bubble-text { font-size: 0.85rem; color: #374151; line-height: 1.5; } /* Ajustado tamanho e cor */
-        .chat-bubble-close { position: absolute; top: 0.4rem; right: 0.4rem; background: none; border: none; color: #9ca3af; font-size: 1.1rem; cursor: pointer; padding: 0; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 4px; transition: all 0.2s ease; } /* Ajustado tamanho, cor */
+        .chat-bubble::after { content: ''; position: absolute; bottom: -7px; right: 18px; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 8px solid #ffffff; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.05)); }
+        .chat-bubble-text { font-size: 0.85rem; color: #374151; line-height: 1.5; }
+        .chat-bubble-close { position: absolute; top: 0.4rem; right: 0.4rem; background: none; border: none; color: #9ca3af; font-size: 1.1rem; cursor: pointer; padding: 0; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 4px; transition: all 0.2s ease; }
         .chat-bubble-close:hover { background: #f3f4f6; color: #6b7280; }
-        .chat-window { position: fixed; bottom: 5rem; right: 1.5rem; width: 360px; height: 480px; background: #ffffff; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); display: none; flex-direction: column; overflow: hidden; z-index: 999; animation: slideUp 0.3s ease; border: 1px solid #e5e7eb; } /* Ajustado tamanho, borda */
+        .chat-window { position: fixed; bottom: 5rem; right: 1.5rem; width: 360px; height: 480px; background: #ffffff; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); display: none; flex-direction: column; overflow: hidden; z-index: 999; animation: slideUp 0.3s ease; border: 1px solid #e5e7eb; }
         .chat-window.show { display: flex; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .chat-header { background: #022c71; color: #ffffff; padding: 0.9rem 1.2rem; font-weight: 600; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center; } /* Ajustado padding, tamanho fonte */
-        .chat-close { background: none; border: none; color: #ffffff; opacity: 0.8; font-size: 1.4rem; cursor: pointer; padding: 0; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 4px; transition: all 0.2s ease; } /* Ajustado tamanho, opacidade */
+        .chat-header { background: #022c71; color: #ffffff; padding: 0.9rem 1.2rem; font-weight: 600; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center; }
+        .chat-close { background: none; border: none; color: #ffffff; opacity: 0.8; font-size: 1.4rem; cursor: pointer; padding: 0; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 4px; transition: all 0.2s ease; }
         .chat-close:hover { background: rgba(255,255,255,0.1); opacity: 1; }
-        .chat-messages { flex: 1; padding: 1.2rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.8rem; background-color: #f9fafb; } /* Ajustado padding, gap, background */
-        .message { max-width: 85%; padding: 0.7rem 0.9rem; border-radius: 10px; animation: messageIn 0.3s ease; font-size: 0.9rem; line-height: 1.5; } /* Ajustado padding, border-radius, tamanho fonte */
+        .chat-messages { flex: 1; padding: 1.2rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.8rem; background-color: #f9fafb; }
+        .message { max-width: 85%; padding: 0.7rem 0.9rem; border-radius: 10px; animation: messageIn 0.3s ease; font-size: 0.9rem; line-height: 1.5; }
         @keyframes messageIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .message.bot { background: #e5e7eb; color: #1f2937; align-self: flex-start; border-bottom-left-radius: 4px; } /* Cor ajustada */
-        .message.user { background: #1d4ed8; color: #ffffff; align-self: flex-end; border-bottom-right-radius: 4px; } /* Cor ajustada para azul mais claro */
-        .chat-input-container { padding: 0.8rem 1.2rem; border-top: 1px solid #e5e7eb; display: flex; gap: 0.5rem; background-color: #ffffff; } /* Ajustado padding, gap, borda */
-        .chat-input-container input { flex: 1; border: 1px solid #d1d5db; padding: 0.7rem 1rem; border-radius: 20px; background: #f9fafb; font-size: 0.9rem; } /* Ajustado padding, tamanho fonte */
-        .chat-input-container button { background: #022c71; color: #ffffff; border: none; padding: 0.7rem 1.2rem; border-radius: 20px; cursor: pointer; font-weight: 500; font-size: 0.9rem; transition: background 0.2s ease; } /* Ajustado padding, tamanho fonte */
+        .message.bot { background: #e5e7eb; color: #1f2937; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .message.user { background: #1d4ed8; color: #ffffff; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .chat-input-container { padding: 0.8rem 1.2rem; border-top: 1px solid #e5e7eb; display: flex; gap: 0.5rem; background-color: #ffffff; }
+        .chat-input-container input { flex: 1; border: 1px solid #d1d5db; padding: 0.7rem 1rem; border-radius: 20px; background: #f9fafb; font-size: 0.9rem; }
+        .chat-input-container button { background: #022c71; color: #ffffff; border: none; padding: 0.7rem 1.2rem; border-radius: 20px; cursor: pointer; font-weight: 500; font-size: 0.9rem; transition: background 0.2s ease; }
         .chat-input-container button:hover { background: #011f4b; }
+
+        /* --- AJUSTES MOBILE --- */
         @media (max-width: 768px) {
-             main { margin: 1.5rem auto; padding: 0 1rem; } /* Margem mobile */
-            .form-container { padding: 1.5rem; } /* Padding mobile */
-            h1 { font-size: 1.8rem; } .subtitle { font-size: 1rem; margin-bottom: 2rem; }
-            .chat-window { width: calc(100% - 2rem); right: 1rem; left: 1rem; bottom: 4.5rem; height: calc(100% - 6rem); max-height: 450px; } /* Ajuste chat mobile */
-            .chat-button { bottom: 1rem; right: 1rem; width: 50px; height: 50px; font-size: 1.2rem; } /* Ajuste botão mobile */
-            .chat-bubble { bottom: 4.5rem; right: 1rem; max-width: calc(100% - 2rem); } /* Ajuste balão mobile */
-            .main-logo { height: 120px; } /* Logo mobile */
+             main { margin: 1.5rem auto; padding: 0 1rem; }
+            .form-container { padding: 1.5rem; }
+             /* *** ALTERAÇÃO 1: AJUSTE DO TÍTULO H1 *** */
+            h1 {
+                font-size: 1.8rem;
+                /* Adiciona quebra de linha via HTML é mais garantido */
+                /* Veja a alteração no HTML abaixo */
+            }
+             .subtitle { font-size: 1rem; margin-bottom: 2rem; }
+            .chat-window { width: calc(100% - 2rem); right: 1rem; left: 1rem; bottom: 4.5rem; height: calc(100% - 6rem); max-height: 450px; }
+            .chat-button { bottom: 1rem; right: 1rem; width: 50px; height: 50px; font-size: 1.2rem; }
+            .chat-bubble { bottom: 4.5rem; right: 1rem; max-width: calc(100% - 2rem); }
+            .main-logo { height: 100px; } /* Diminuí um pouco o logo no mobile */
         }
+        /* Ajuste fino para telas MUITO pequenas, se necessário */
+         @media (max-width: 380px) {
+             h1 { font-size: 1.6rem; }
+             .main-logo { height: 90px; }
+         }
 
     </style>
 </head>
@@ -85,15 +104,14 @@
 
     <main>
         <div style="text-align: center; margin-bottom: 0.5rem;">
-            <!-- CORREÇÃO: Adicionada a barra '/' no início do src -->
             <img src="/logo.png" alt="Logo Teclabel" class="main-logo">
         </div>
-        <!-- *** ALTERAÇÃO 1: TÍTULO *** -->
-        <h1>CADASTRO DE ORÇAMENTO</h1>
+        <!-- *** ALTERAÇÃO 1: QUEBRA DE LINHA NO TÍTULO *** -->
+        <h1>CADASTRO DE<br>ORÇAMENTO</h1>
         <p class="subtitle">Configure as especificações do seu produto.</p>
 
         <div id="successMessage" class="success-message" style="display: none;">
-             Pedido registrado com sucesso! O chatbot foi atualizado com este registro.
+             <!-- O texto é preenchido pelo JS -->
         </div>
 
         <div class="form-container">
@@ -206,27 +224,25 @@
                     </div>
                 </div>
 
-                <!-- *** ALTERAÇÃO 2: TEXTO DO BOTÃO *** -->
                 <button type="submit" id="submitButton">Cadastrar Orçamento</button>
             </form>
         </div>
     </main>
 
     <!-- Chatbot -->
-    <div class="chat-bubble" id="chatBubble" style="display: none;"> <!-- Inicia escondido -->
+    <div class="chat-bubble" id="chatBubble" style="display: none;">
         <button class="chat-bubble-close" id="bubbleClose">×</button>
         <div class="chat-bubble-text">Precisa de uma <strong>estimativa rápida</strong>? Me pergunte! 💬</div>
     </div>
     <button class="chat-button" id="chatButton">
-         <i class="fas fa-comment-dots"></i> <!-- Ícone adicionado -->
+         <i class="fas fa-comment-dots"></i>
     </button>
-    <div class="chat-window" id="chatWindow" style="display: none;"> <!-- Inicia escondido -->
+    <div class="chat-window" id="chatWindow" style="display: none;">
         <div class="chat-header">
             <span>GrafiBot Orçamentista</span>
             <button class="chat-close" id="chatClose">×</button>
         </div>
         <div class="chat-messages" id="chatMessages">
-            <!-- NOVA MENSAGEM INICIAL -->
             <div class="message bot">Olá! 👋 Sou o GrafiBot, seu assistente virtual da Teclabel. Estou aqui para ajudar a estimar o valor do seu próximo pedido ou consultar registros recentes. Como posso te ajudar hoje?</div>
         </div>
         <div class="chat-input-container">
@@ -236,7 +252,7 @@
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => { // Garante que o DOM está pronto
+    document.addEventListener('DOMContentLoaded', () => {
 
         // --- LÓGICA DO FORMULÁRIO ---
         const quantidadeInput = document.getElementById('quantidade');
@@ -244,7 +260,7 @@
         const valorUnitarioDisplay = document.getElementById('valorUnitario');
         const orderForm = document.getElementById('orderForm');
         const successMessage = document.getElementById('successMessage');
-        const submitButton = document.getElementById('submitButton'); // Pega o botão
+        const submitButton = document.getElementById('submitButton');
 
         function calcularValorUnitario() {
             const quantidade = parseFloat(quantidadeInput.value) || 0;
@@ -260,11 +276,11 @@
         quantidadeInput.addEventListener('input', calcularValorUnitario);
         valorFinalInput.addEventListener('input', calcularValorUnitario);
 
-        orderForm.addEventListener('submit', async function(e) { // Adicionado async
+        orderForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            submitButton.disabled = true; // Desabilita o botão
-            submitButton.textContent = 'Enviando...'; // Muda o texto do botão
-            successMessage.style.display = 'none'; // Esconde mensagem anterior
+            submitButton.disabled = true;
+            submitButton.textContent = 'Enviando...';
+            successMessage.style.display = 'none';
 
             const formData = {
                 quantidade: quantidadeInput.value,
@@ -281,41 +297,31 @@
 
             console.log('Enviando configuração:', formData);
 
-            // --- CONECTANDO AO BACKEND ---
             try {
-                // Assume que o backend está rodando na mesma origem (Render)
                 const response = await fetch('/api/registrar_pedido', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData)
                 });
-
                 const data = await response.json();
-
                 if (response.ok) {
                     console.log('Resposta do servidor:', data);
-                    successMessage.textContent = '✓ ' + data.success; // Usa a mensagem do backend
-                    successMessage.style.display = 'block'; // Mostra a mensagem de sucesso
+                    successMessage.textContent = '✓ ' + data.success;
+                    successMessage.style.display = 'block';
                     orderForm.reset();
                     valorUnitarioDisplay.textContent = 'R$ 0,00';
                 } else {
                     console.error('Erro do servidor:', data.error);
-                    // Mostra erro (poderia ser um elemento na página)
                     alert('Erro ao registrar orçamento: ' + data.error);
                 }
             } catch (error) {
                 console.error('Erro de rede ao enviar orçamento:', error);
                 alert('Erro de conexão ao tentar registrar o orçamento. Verifique o console.');
             } finally {
-                 submitButton.disabled = false; // Reabilita o botão
-                 // *** ALTERAÇÃO 3: TEXTO DO BOTÃO (JAVASCRIPT) ***
-                 submitButton.textContent = 'Cadastrar Orçamento'; // Restaura o texto
-                 // Esconde a mensagem de sucesso após 5 segundos
-                 setTimeout(() => {
-                    successMessage.style.display = 'none';
-                 }, 5000);
+                 submitButton.disabled = false;
+                 submitButton.textContent = 'Cadastrar Orçamento';
+                 setTimeout(() => { successMessage.style.display = 'none'; }, 5000);
             }
-            // --- FIM DA CONEXÃO AO BACKEND ---
         });
 
         // --- LÓGICA DO CHATBOT ---
@@ -327,7 +333,6 @@
         const chatInput = document.getElementById('chatInput');
         const chatSend = document.getElementById('chatSend');
         const chatMessages = document.getElementById('chatMessages');
-
         const bubbleMessages = [
             'Precisa de uma <strong>estimativa rápida</strong>? Me pergunte! 💬',
             'Quer ter uma <strong>ideia de preço</strong> antes de preencher tudo? 🤔',
@@ -338,18 +343,15 @@
         let bubbleInterval;
         let bubbleDismissed = false;
 
-        // Mostra o balão após 3 segundos
         const bubbleTimeout = setTimeout(() => {
             if (!bubbleDismissed && !chatWindow.style.display || chatWindow.style.display === 'none') {
-                chatBubble.style.display = 'block'; // Usar display block/none
+                chatBubble.style.display = 'block';
                 startBubbleRotation();
             }
         }, 3000);
 
         function startBubbleRotation() {
-            // Limpa intervalo anterior se existir
             if(bubbleInterval) clearInterval(bubbleInterval);
-
             bubbleInterval = setInterval(() => {
                 if (!bubbleDismissed && chatBubble.style.display === 'block') {
                     currentBubbleIndex = (currentBubbleIndex + 1) % bubbleMessages.length;
@@ -362,21 +364,20 @@
             chatBubble.style.display = 'none';
             bubbleDismissed = true;
             clearInterval(bubbleInterval);
-            clearTimeout(bubbleTimeout); // Cancela o aparecimento inicial se fechado antes
+            clearTimeout(bubbleTimeout);
         });
 
         chatButton.addEventListener('click', () => {
-            chatWindow.style.display = 'flex'; // Usar display flex/none
+            chatWindow.style.display = 'flex';
             chatButton.style.display = 'none';
             chatBubble.style.display = 'none';
             bubbleDismissed = true;
             clearInterval(bubbleInterval);
             clearTimeout(bubbleTimeout);
-            chatInput.focus(); // Foca no input ao abrir
+            chatInput.focus();
         });
 
         chatBubble.addEventListener('click', (e) => {
-            // Só abre se não clicar no botão de fechar
             if (!bubbleClose.contains(e.target)) {
                  chatWindow.style.display = 'flex';
                  chatButton.style.display = 'none';
@@ -390,12 +391,11 @@
 
         chatClose.addEventListener('click', () => {
             chatWindow.style.display = 'none';
-            chatButton.style.display = 'flex'; // Garantir que volte como flex
-            bubbleDismissed = false; // Permite que o balão volte a aparecer
-            // Reativa o balão depois de 10 segundos
+            chatButton.style.display = 'flex';
+            bubbleDismissed = false;
             setTimeout(() => {
                 if (!chatWindow.style.display || chatWindow.style.display === 'none') {
-                    chatBubble.querySelector('.chat-bubble-text').innerHTML = bubbleMessages[currentBubbleIndex]; // Reseta msg
+                    chatBubble.querySelector('.chat-bubble-text').innerHTML = bubbleMessages[currentBubbleIndex];
                     chatBubble.style.display = 'block';
                     startBubbleRotation();
                 }
@@ -405,41 +405,28 @@
         function addMessage(text, isUser) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
-            
-            // --- *** ALTERAÇÃO 4: REMOVER ASTERISCOS (MARKDOWN) *** ---
-            // 1. Remove os ** de negrito (Markdown), mantendo o texto.
             let formattedText = text.replace(/\*\*(.*?)\*\*/g, '$1');
-            // 2. Substitui \n por <br> (quebras de linha)
             formattedText = formattedText.replace(/\n/g, '<br>');
-
             messageDiv.innerHTML = formattedText;
-            // --- FIM DA ALTERAÇÃO ---
-
             chatMessages.appendChild(messageDiv);
-            // Scroll suave para a última mensagem
             chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
         }
 
-        async function sendMessage() { // Adicionado async
+        async function sendMessage() {
             const message = chatInput.value.trim();
             if (!message) return;
-
             addMessage(message, true);
             chatInput.value = '';
-            chatSend.disabled = true; // Desabilita botão enquanto espera
-            chatSend.textContent = '...'; // Indica carregando
+            chatSend.disabled = true;
+            chatSend.textContent = '...';
 
-             // --- CONECTANDO AO BACKEND DO CHATBOT ---
             try {
-                // Assume que o backend está na mesma origem
                 const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: message }),
                 });
-
                 const data = await response.json();
-
                 if (response.ok && data.reply) {
                     addMessage(data.reply, false);
                 } else {
@@ -450,24 +437,22 @@
                 addMessage('Erro de conexão com o assistente. Tente novamente.', false);
                 console.error("Erro de rede no Chat:", error);
             } finally {
-                 chatSend.disabled = false; // Reabilita botão
-                 chatSend.textContent = 'Enviar'; // Restaura texto
+                 chatSend.disabled = false;
+                 chatSend.textContent = 'Enviar';
             }
-             // --- FIM DA CONEXÃO AO BACKEND DO CHATBOT ---
         }
 
         chatSend.addEventListener('click', sendMessage);
         chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) { // Envia com Enter, permite Shift+Enter para nova linha
-                e.preventDefault(); // Evita nova linha no input
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
                 sendMessage();
             }
         });
 
-        // Adiciona ícone Font Awesome ao botão do chat (requer Font Awesome carregado no <head>, já está)
         const chatButtonIcon = document.createElement('i');
         chatButtonIcon.className = 'fas fa-comment-dots';
-        chatButton.innerHTML = ''; // Limpa o texto '💬'
+        chatButton.innerHTML = '';
         chatButton.appendChild(chatButtonIcon);
 
     }); // Fim do DOMContentLoaded
