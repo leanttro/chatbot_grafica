@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teclabel - Configuração de Pedidos</title>
+    <title>Teclabel - Configuração de Orçamentos</title> <!-- Título da Aba Atualizado -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -86,7 +88,8 @@
             <!-- CORREÇÃO: Adicionada a barra '/' no início do src -->
             <img src="/logo.png" alt="Logo Teclabel" class="main-logo">
         </div>
-        <h1>CADASTRO DE PEDIDO</h1>
+        <!-- *** ALTERAÇÃO 1: TÍTULO *** -->
+        <h1>CADASTRO DE ORÇAMENTO</h1>
         <p class="subtitle">Configure as especificações do seu produto.</p>
 
         <div id="successMessage" class="success-message" style="display: none;">
@@ -203,7 +206,8 @@
                     </div>
                 </div>
 
-                <button type="submit" id="submitButton">Cadastrar Pedido</button>
+                <!-- *** ALTERAÇÃO 2: TEXTO DO BOTÃO *** -->
+                <button type="submit" id="submitButton">Cadastrar Orçamento</button>
             </form>
         </div>
     </main>
@@ -297,14 +301,15 @@
                 } else {
                     console.error('Erro do servidor:', data.error);
                     // Mostra erro (poderia ser um elemento na página)
-                    alert('Erro ao registrar pedido: ' + data.error);
+                    alert('Erro ao registrar orçamento: ' + data.error);
                 }
             } catch (error) {
-                console.error('Erro de rede ao enviar pedido:', error);
-                alert('Erro de conexão ao tentar registrar o pedido. Verifique o console.');
+                console.error('Erro de rede ao enviar orçamento:', error);
+                alert('Erro de conexão ao tentar registrar o orçamento. Verifique o console.');
             } finally {
                  submitButton.disabled = false; // Reabilita o botão
-                 submitButton.textContent = 'Cadastrar Pedido'; // Restaura o texto
+                 // *** ALTERAÇÃO 3: TEXTO DO BOTÃO (JAVASCRIPT) ***
+                 submitButton.textContent = 'Cadastrar Orçamento'; // Restaura o texto
                  // Esconde a mensagem de sucesso após 5 segundos
                  setTimeout(() => {
                     successMessage.style.display = 'none';
@@ -400,8 +405,16 @@
         function addMessage(text, isUser) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
-            // Convertendo quebras de linha para <br> para exibir corretamente
-            messageDiv.innerHTML = text.replace(/\n/g, '<br>');
+            
+            // --- *** ALTERAÇÃO 4: REMOVER ASTERISCOS (MARKDOWN) *** ---
+            // 1. Remove os ** de negrito (Markdown), mantendo o texto.
+            let formattedText = text.replace(/\*\*(.*?)\*\*/g, '$1');
+            // 2. Substitui \n por <br> (quebras de linha)
+            formattedText = formattedText.replace(/\n/g, '<br>');
+
+            messageDiv.innerHTML = formattedText;
+            // --- FIM DA ALTERAÇÃO ---
+
             chatMessages.appendChild(messageDiv);
             // Scroll suave para a última mensagem
             chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
@@ -461,3 +474,4 @@
     </script>
 </body>
 </html>
+
