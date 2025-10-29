@@ -1,0 +1,72 @@
+Arquivos de ambiente
+
+.env
+.env.
+!.env.example
+
+Dependências Python
+
+venv/
+*.venv/
+env/
+*.env/
+ENV/
+*.ENV/
+env.bak/
+venv.bak/
+
+Arquivos compilados Python
+
+pycache/
+*.py[cod]
+*$py.class
+
+Arquivos de sistema operacional
+
+.DS_Store
+Thumbs.db
+
+Arquivos de IDEs
+
+.idea/
+.vscode/
+*.swp
+*.swo
+
+Arquivos de teste
+
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+Arquivos de distribuição/build
+
+dist/
+build/
+*.egg-info/
+*.egg
+
+Logs
+
+*.log
+logs/
+
+
+**Instruções:**
+
+1.  **Salve os Arquivos:** Salve o primeiro bloco de código como `app.py` e o segundo como `.gitignore` dentro da sua pasta `chatbot_grafica`.
+2.  **Crie o `.env`:** Crie um arquivo chamado `.env` na mesma pasta e coloque suas credenciais (exatamente como no seu projeto `feirasderua`):
+    ```
+    DATABASE_URL=postgresql://seu_usuario:sua_senha@seu_host...
+    GEMINI_API_KEY=sua_chave_do_gemini_aqui
+    ```
+3.  **Crie o `requirements.txt`:** Crie um arquivo `requirements.txt` e adicione as bibliotecas:
+    ```
+    Flask
+    psycopg2-binary
+    python-dotenv
+    Flask-Cors
+    google-generativeai
+    pandas # Opcional, se precisar de manipulação mais avançada no futuro
+
