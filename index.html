@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teclabel - Configuração de Orçamentos</title> <!-- Título da Aba Atualizado -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>Teclabel - Configuração de Orçamentos</title> <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -14,6 +13,13 @@
             background: linear-gradient(-45deg, #fafafa, #f4f6f9, #ffffff, #f0f2f5);
             background-size: 400% 400%; animation: animateBackground 15s ease infinite;
         }
+        
+        /* *** ALTERAÇÃO SOLICITADA 1: TRAVAR TELA PARA ROLAGEM HORIZONTAL *** */
+        body, html {
+            overflow-x: hidden; /* Desativa a rolagem horizontal em toda a página */
+        }
+        /* *** FIM DA ALTERAÇÃO 1 *** */
+
         @keyframes animateBackground { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         header { background: #ffffff; padding: 1.5rem 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04); position: sticky; top: 0; z-index: 100; }
         .logo-container { max-width: 1200px; margin: 0 auto; text-align: center; }
@@ -23,6 +29,11 @@
         .main-logo { height: 140px; margin-bottom: 1.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.05)); transition: transform 0.3s ease; display: block; margin-left: auto; margin-right: auto; } /* Garantir centralização e display block */
         .main-logo:hover { transform: scale(1.03); }
         h1 { font-size: 2.2rem; font-weight: 800; color: #022c71; margin-bottom: 0.5rem; letter-spacing: -0.02em; text-align: center; } /* Ajustado tamanho para mobile */
+        /* *** ALTERAÇÃO SOLICITADA 2: FORÇAR QUEBRA DE LINHA NO TÍTULO EM MOBILE (ESCONDER <br> NO DESKTOP) *** */
+        h1 br { 
+            display: none; /* Esconde a tag <br> por padrão (desktop) */
+        }
+        /* *** FIM DA ALTERAÇÃO 2 *** */
         .subtitle { font-size: 1.1rem; color: #666; margin-bottom: 2.5rem; font-weight: 400; text-align: center; } /* Ajustado tamanho e margem */
         .form-container { background: #ffffff; border-radius: 16px; padding: 2.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.02), 0 1px 3px rgba(0,0,0,0.04); }
         .form-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.5rem; } /* Coluna única por padrão */
@@ -77,6 +88,11 @@
             .chat-button { bottom: 1rem; right: 1rem; width: 50px; height: 50px; font-size: 1.2rem; } /* Ajuste botão mobile */
             .chat-bubble { bottom: 4.5rem; right: 1rem; max-width: calc(100% - 2rem); } /* Ajuste balão mobile */
             .main-logo { height: 120px; } /* Logo mobile */
+            /* *** ALTERAÇÃO SOLICITADA 2: FORÇAR QUEBRA DE LINHA NO TÍTULO EM MOBILE (MOSTRAR <br>) *** */
+            h1 br {
+                display: block; /* Mostra a quebra de linha em telas <= 768px */
+            }
+            /* *** FIM DA ALTERAÇÃO 2 *** */
         }
 
     </style>
@@ -85,11 +101,9 @@
 
     <main>
         <div style="text-align: center; margin-bottom: 0.5rem;">
-            <!-- CORREÇÃO: Adicionada a barra '/' no início do src -->
             <img src="/logo.png" alt="Logo Teclabel" class="main-logo">
         </div>
-        <!-- *** ALTERAÇÃO 1: TÍTULO *** -->
-        <h1>CADASTRO DE ORÇAMENTO</h1>
+        <h1>CADASTRO DE<br>ORÇAMENTO</h1>
         <p class="subtitle">Configure as especificações do seu produto.</p>
 
         <div id="successMessage" class="success-message" style="display: none;">
@@ -206,27 +220,21 @@
                     </div>
                 </div>
 
-                <!-- *** ALTERAÇÃO 2: TEXTO DO BOTÃO *** -->
                 <button type="submit" id="submitButton">Cadastrar Orçamento</button>
             </form>
         </div>
     </main>
 
-    <!-- Chatbot -->
-    <div class="chat-bubble" id="chatBubble" style="display: none;"> <!-- Inicia escondido -->
-        <button class="chat-bubble-close" id="bubbleClose">×</button>
+    <div class="chat-bubble" id="chatBubble" style="display: none;"> <button class="chat-bubble-close" id="bubbleClose">×</button>
         <div class="chat-bubble-text">Precisa de uma <strong>estimativa rápida</strong>? Me pergunte! 💬</div>
     </div>
     <button class="chat-button" id="chatButton">
-         <i class="fas fa-comment-dots"></i> <!-- Ícone adicionado -->
-    </button>
-    <div class="chat-window" id="chatWindow" style="display: none;"> <!-- Inicia escondido -->
-        <div class="chat-header">
+         <i class="fas fa-comment-dots"></i> </button>
+    <div class="chat-window" id="chatWindow" style="display: none;"> <div class="chat-header">
             <span>GrafiBot Orçamentista</span>
             <button class="chat-close" id="chatClose">×</button>
         </div>
         <div class="chat-messages" id="chatMessages">
-            <!-- NOVA MENSAGEM INICIAL -->
             <div class="message bot">Olá! 👋 Sou o GrafiBot, seu assistente virtual da Teclabel. Estou aqui para ajudar a estimar o valor do seu próximo pedido ou consultar registros recentes. Como posso te ajudar hoje?</div>
         </div>
         <div class="chat-input-container">
@@ -474,4 +482,3 @@
     </script>
 </body>
 </html>
-
