@@ -11,7 +11,8 @@ import traceback # Para logs de erro mais detalhados
 
 # --- CONFIGURAÇÃO INICIAL ---
 load_dotenv() # Carrega variáveis do arquivo .env (DATABASE_URL, GEMINI_API_KEY)
-app = Flask(__name__, template_folder='.', static_folder='.') # Servir arquivos da pasta raiz
+# Servir arquivos estáticos (como logo.png) da pasta raiz '.'
+app = Flask(__name__, template_folder='.', static_folder='.', static_url_path='')
 CORS(app)
 
 # Configura o Gemini (lê a chave do .env)
@@ -40,13 +41,11 @@ def get_db_connection():
         print(f"❌ ERRO CRÍTICO: Não foi possível conectar ao banco de dados: {e}")
         raise
 
-# Helper para formatar dados (decimal, etc.) - Você já tem isso
+# Helper para formatar dados (decimal, etc.)
 class DecimalEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, decimal.Decimal):
-            # Converte Decimal para string para evitar problemas de precisão com float
             return str(obj)
-        # Permite que a classe base lide com outros tipos
         return super(DecimalEncoder, self).default(obj)
 app.json_encoder = DecimalEncoder
 
@@ -57,66 +56,77 @@ def get_grafica_data_for_bot(limit=50):
     conn = None
     try:
         conn = get_db_connection()
-        # Usando RealDictCursor para obter resultados como dicionários
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-
-        # Seleciona as colunas relevantes e ordena pelos IDs mais recentes
-        cur.execute(f"SELECT id, quantidade, produto, material, impressao, valor_final FROM grafica ORDER BY id DESC LIMIT {limit}")
+        cur.execute(f"SELECT id, quantidade, produto, material, impressao, largura, altura, valor_final FROM grafica ORDER BY id DESC LIMIT {limit}")
         registros_raw = cur.fetchall()
         cur.close()
-
-        # Converte para lista de dicionários padrão
         registros = [dict(row) for row in registros_raw]
         print(f"ℹ️ Dados do Bot: Carregados {len(registros)} registros recentes da tabela 'grafica'.")
         return registros
     except psycopg2.errors.UndefinedTable:
          print(f"⚠️ AVISO: A tabela 'grafica' não foi encontrada. O chatbot não terá contexto de pedidos.")
-         return [] # Retorna lista vazia se a tabela não existe
+         return []
     except Exception as e:
         print(f"❌ ERRO ao buscar dados da tabela 'grafica' para o bot: {e}")
         traceback.print_exc()
-        return [] # Retorna lista vazia em caso de erro
+        return []
     finally:
         if conn: conn.close()
 
-# Carrega os dados UMA VEZ na inicialização do servidor
 grafica_data_context = get_grafica_data_for_bot()
-
-# Converte os dados para JSON para injetar no prompt
-# Usa o DecimalEncoder customizado e garante que caracteres PT-BR fiquem corretos
 grafica_json_context = json.dumps(grafica_data_context, cls=DecimalEncoder, ensure_ascii=False, separators=(',', ':'))
 
-# Define o Prompt do Sistema para o Gemini
+# --- NOVO SYSTEM PROMPT ---
 SYSTEM_PROMPT = f"""
-Você é o 'GrafiBot', um assistente técnico interno de uma gráfica rápida, especializado em orçamentos e consulta de pedidos recentes.
-Sua única fonte de verdade é a base de dados de pedidos recentes em JSON fornecida abaixo.
+Você é o 'GrafiBot', um assistente virtual amigável e especialista da Teclabel, focado em ajudar usuários a obterem *estimativas* de orçamento para produtos gráficos.
+Sua única fonte de verdade para estimativas é a base de dados de pedidos recentes em JSON fornecida abaixo.
 
 --- BASE DE DADOS (Pedidos Recentes - JSON) ---
 {grafica_json_context}
 --- FIM DA BASE DE DADOS ---
 
-REGRAS ESTRITAS:
-1.  **FOCO NOS DADOS:** Baseie 100% das suas respostas nos dados JSON fornecidos. Use os nomes, quantidades e valores EXATOS da base.
-2.  **NÃO ALUCINE:** Você NUNCA deve inventar um pedido, preço, material ou qualquer informação que não esteja na base. Se a informação não estiver lá, diga que não encontrou nos registros recentes.
-3.  **SEJA UM CONSULTOR:** Aja como um consultor interno. Seja direto, técnico e preciso. Ex: "Encontrei o Pedido ID 123: 1000 Cartões de Visita em Couchê 300g, 4x4 Cores, por R$ XXX,XX."
-4.  **PARA ORÇAMENTOS (SIMULADO):** Se o usuário pedir um orçamento (ex: "quanto custa 500 folders?"), use a BASE DE DADOS como *inspiração* para dar uma *estimativa*. Diga algo como: "Com base em pedidos recentes similares, um pedido de 500 folders [Material X], [Impressão Y] custou aproximadamente R$ ZZZ,ZZ. Para um orçamento exato, por favor, use o formulário de cadastro." **NUNCA** dê um preço exato se não estiver na base.
-5.  **CONSULTA DE VENDAS:** Se o usuário perguntar sobre vendas recentes (ex: "quais foram os últimos pedidos de etiqueta?"), liste os pedidos relevantes da BASE DE DADOS.
-6.  **RECUSE OUTROS ASSUNTOS:** Responda apenas sobre orçamentos e pedidos da gráfica. Recuse educadamente outros tópicos.
+**FLUXO DE CONVERSA PARA ORÇAMENTO (SIGA ESTRITAMENTE):**
+
+1.  **Saudação Amigável e Apresentação:** Comece sempre com algo como: "Olá! 👋 Sou o GrafiBot, seu assistente virtual da Teclabel. Estou aqui para ajudar a estimar o valor do seu próximo pedido ou consultar registros recentes. Como posso te ajudar hoje?"
+2.  **Identifique a Intenção (Orçamento):** Se o usuário expressar interesse em preço, orçamento, cotação ou valor:
+    * **Pergunte o Essencial (1ª pergunta):** "Legal! Para começarmos, me diga qual **produto** você tem em mente e a **quantidade** aproximada."
+    * **Colete Detalhes Essenciais (Perguntas seguintes, UMA DE CADA VEZ):** Baseado na resposta, pergunte educadamente pelos detalhes CHAVE que você vê na BASE DE DADOS (Material, Impressão, Tamanho). Exemplos:
+        * "Entendido. E qual **material** você está pensando para essas etiquetas?"
+        * "Perfeito. E como seria a **impressão**? (Ex: 4x0 cores, 1x0 cor, digital...)"
+        * "Anotado! Qual o **tamanho** aproximado que você precisa (Largura x Altura em cm)?"
+    * **Continue perguntando** até ter pelo menos: Produto, Quantidade, Material e Impressão. O tamanho é bom ter, mas opcional se não souber.
+3.  **Confirme os Dados Coletados:** Antes de prosseguir, recapitule de forma clara: "Ok, vamos confirmar: Você precisa de [Quantidade] [Produto] em [Material], com impressão [Impressão] e tamanho aproximado [LxA cm, se informado]. É isso mesmo?"
+4.  **Busque e Forneça a ESTIMATIVA (SEMPRE):** Se o usuário confirmar:
+    * Procure na BASE DE DADOS por 1 ou 2 pedidos **o mais similares possível** (mesmo produto/material, quantidade próxima).
+    * **APRESENTE A ESTIMATIVA:** "Com base em pedidos recentes parecidos que encontrei aqui, uma estimativa para o seu pedido seria **em torno de R$ XXX,XX**."
+    * **JUSTIFIQUE COM EXEMPLO:** "Para você ter uma ideia, encontrei o pedido ID [ID do Exemplo], que foram [Qtd Exemplo] [Produto Exemplo] em [Material Exemplo], e o valor final ficou em R$ [Valor Exemplo]." (Use apenas UM exemplo claro).
+    * **REFORCE QUE É ESTIMATIVA:** Conclua SEMPRE com: "**Lembre-se: este é apenas um valor estimado** baseado em pedidos anteriores, ok? Para um orçamento exato e formal, por favor, preencha o formulário de cadastro na página."
+5.  **Se Não Achar Similar:** Seja honesto: "Hmm, não encontrei pedidos recentes muito parecidos com essas especificações na minha base para dar uma estimativa confiável 🤔. Recomendo preencher o formulário na página para receber um orçamento preciso da nossa equipe."
+
+**OUTRAS REGRAS:**
+
+* **Consulta de Vendas:** Se o usuário perguntar sobre vendas/pedidos recentes, liste os 3-5 exemplos mais recentes da BASE DE DADOS de forma resumida (ID, Produto, Qtd, Valor).
+* **NÃO ALUCINE:** Jamais invente preços, produtos, materiais ou características. Se não está na base, não existe para você.
+* **SEJA CONVERSACIONAL e PACIENTE:** Use emojis leves (👋, 👍, 🤔, ✅), seja educado e guie o usuário passo a passo.
+* **FOCO NA GRÁFICA:** Responda apenas sobre orçamentos e pedidos da gráfica. Recuse educadamente outros assuntos.
 """
+# --- FIM DO NOVO SYSTEM PROMPT ---
+
 
 # Inicializa o Modelo e a Sessão de Chat
 model = None
 chat_session = None
 try:
-    if api_key: # Só tenta inicializar se a API key foi carregada
+    if api_key:
         model = genai.GenerativeModel('gemini-flash-latest')
         chat_session = model.start_chat(
             history=[
                 {"role": "user", "parts": [SYSTEM_PROMPT]},
-                {"role": "model", "parts": ["Entendido. Sou o GrafiBot. Minha base de pedidos recentes está carregada. Pronto para consultar ou estimar orçamentos."]}
+                # Nova Mensagem Inicial do Modelo (mais amigável)
+                {"role": "model", "parts": ["Olá! 👋 Sou o GrafiBot, seu assistente virtual da Teclabel. Estou aqui para ajudar a estimar o valor do seu próximo pedido ou consultar registros recentes. Como posso te ajudar hoje?"]}
             ]
         )
-        print("✅ Modelo Gemini ('gemini-flash-latest') inicializado com o contexto da tabela 'grafica'.")
+        print("✅ Modelo Gemini ('gemini-flash-latest') inicializado com o NOVO contexto.")
     else:
         print("⚠️ AVISO: API Key do Gemini não carregada. O chatbot não funcionará.")
 
@@ -126,14 +136,11 @@ except Exception as e:
 
 # --- ROTAS DA APLICAÇÃO ---
 
-# Rota para servir o HTML principal (seu index.html)
 @app.route('/')
 def index():
     """Serve a página principal."""
-    # Flask procura automaticamente por 'index.html' na pasta raiz devido a `template_folder='.'`
     return render_template('index.html')
 
-# Rota para a API do Chatbot
 @app.route('/api/chat', methods=['POST'])
 def handle_chat():
     """Recebe a mensagem do usuário e retorna a resposta do Gemini."""
@@ -148,17 +155,18 @@ def handle_chat():
         if not user_message:
             return jsonify({'error': 'Mensagem não pode ser vazia.'}), 400
 
-        # Envia a mensagem para o Gemini (o histórico é mantido no 'chat_session')
-        # Inclui configuração para tentar evitar bloqueios
+        print(f"💬 Mensagem do Usuário: {user_message}") # Log da mensagem recebida
+
+        # Envia a mensagem para o Gemini
         response = chat_session.send_message(
             user_message,
-            generation_config=genai.types.GenerationConfig(temperature=0.7),
+            generation_config=genai.types.GenerationConfig(temperature=0.7), # Um pouco de criatividade
             safety_settings={'HATE': 'BLOCK_NONE', 'HARASSMENT': 'BLOCK_NONE',
                              'SEXUAL' : 'BLOCK_NONE', 'DANGEROUS' : 'BLOCK_NONE'}
         )
 
-        # Retorna a resposta do modelo para o front-end
-        print(f"🤖 Resposta do Bot: {response.text[:100]}...") # Log curto da resposta
+        # Log curto da resposta antes de enviar
+        print(f"🤖 Resposta do Bot: {response.text[:100]}...")
         return jsonify({'reply': response.text})
 
     except genai.types.generation_types.StopCandidateException as stop_ex:
@@ -169,15 +177,14 @@ def handle_chat():
         traceback.print_exc()
         return jsonify({'error': 'Ocorreu um erro ao processar sua mensagem com a IA.'}), 503
 
-# Rota NOVA para registrar o pedido na tabela 'grafica'
+# Rota para registrar o pedido na tabela 'grafica'
 @app.route('/api/registrar_pedido', methods=['POST'])
 def registrar_pedido():
     """Recebe dados do formulário HTML e insere na tabela 'grafica'."""
     dados = request.json
     conn = None
-    print(f"ℹ️ Recebido POST em /api/registrar_pedido: {dados}") # Log para ver os dados chegando
+    print(f"ℹ️ Recebido POST em /api/registrar_pedido: {dados}")
 
-    # Validação simples (pode ser melhorada)
     if not dados or 'quantidade' not in dados or 'produto' not in dados or 'valorFinal' not in dados:
          print("❌ Erro em /api/registrar_pedido: Dados incompletos recebidos.")
          return jsonify({'error': 'Dados incompletos para registrar o pedido.'}), 400
@@ -186,26 +193,17 @@ def registrar_pedido():
         conn = get_db_connection()
         cur = conn.cursor()
 
-        # SQL para inserir na tabela 'grafica' (ajuste as colunas se necessário)
-        # Garante que os nomes aqui batam EXATAMENTE com os nomes das colunas no seu DB
         sql_insert = """
         INSERT INTO grafica (
             QUANTIDADE, PRODUTO, MATERIAL, IMPRESSAO, LARGURA, ALTURA,
             TIPO_DE_CORTE, ACABAMENTO, EXTRA, VALOR_FINAL
         ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
         """
-        # Monta a tupla de valores na ordem correta, usando .get() para campos opcionais
         valores = (
-            dados.get('quantidade'),
-            dados.get('produto'),
-            dados.get('material'),
-            dados.get('impressao'),
-            dados.get('largura') or None, # Trata campos numéricos vazios como NULL
-            dados.get('altura') or None,
-            dados.get('tipoCorte') or None, # Nome do JS é tipoCorte
-            dados.get('acabamento'),
-            dados.get('extra') or None, # Trata 'Nenhum' ou vazio como NULL
-            dados.get('valorFinal') # Nome do JS é valorFinal
+            dados.get('quantidade'), dados.get('produto'), dados.get('material'),
+            dados.get('impressao'), dados.get('largura') or None, dados.get('altura') or None,
+            dados.get('tipoCorte') or None, dados.get('acabamento'), dados.get('extra') or None,
+            dados.get('valorFinal')
         )
 
         cur.execute(sql_insert, valores)
@@ -213,33 +211,39 @@ def registrar_pedido():
         cur.close()
         print("✅ Pedido registrado com sucesso na tabela 'grafica'.")
 
-        # ATENÇÃO: Reiniciar o servidor ainda é necessário para o BOT ver o novo dado
-        # Poderíamos recarregar o contexto aqui, mas o restart é mais simples para a demo.
+        # Recarrega o contexto do bot APÓS salvar o novo pedido
         global grafica_data_context, grafica_json_context, SYSTEM_PROMPT, chat_session
         print("🔄 Recarregando contexto do bot após novo pedido...")
-        grafica_data_context = get_grafica_data_for_bot()
+        grafica_data_context = get_grafica_data_for_bot() # Busca os dados mais recentes
         grafica_json_context = json.dumps(grafica_data_context, cls=DecimalEncoder, ensure_ascii=False, separators=(',', ':'))
+
+        # ATUALIZA O SYSTEM_PROMPT com os novos dados
         SYSTEM_PROMPT = f"""
-        Você é o 'GrafiBot'...
+        Você é o 'GrafiBot', um assistente virtual amigável... (COLE O NOVO PROMPT COMPLETO AQUI)...
         --- BASE DE DADOS (Pedidos Recentes - JSON) ---
         {grafica_json_context}
         --- FIM DA BASE DE DADOS ---
-        ... (Resto do prompt) ...
+        ... (Resto das regras) ...
         """
-        # Reinicia a sessão de chat com o novo prompt
+
+        # Reinicia a sessão de chat com o prompt atualizado
         if model:
+             # Guarda o histórico antigo (opcional, pode ficar confuso)
+             # old_history = chat_session.history if chat_session else []
+
              chat_session = model.start_chat(
                 history=[
                     {"role": "user", "parts": [SYSTEM_PROMPT]},
-                    {"role": "model", "parts": ["Entendido. Sou o GrafiBot. Base de pedidos atualizada. Pronto para ajudar."]}
+                    {"role": "model", "parts": ["Entendido. Sou o GrafiBot. Base de pedidos atualizada com o último registro. Pronto para ajudar."]}
+                    # Pode tentar adicionar o histórico antigo aqui se quiser manter a conversa:
+                    # *old_history[2:] # Pula os prompts iniciais antigos
                 ]
             )
-             print("✅ Contexto do bot atualizado com o novo pedido.")
+             print("✅ Contexto do bot atualizado dinamicamente com o novo pedido.")
         else:
              print("⚠️ Bot não inicializado, não foi possível atualizar contexto.")
 
-
-        return jsonify({'success': 'Pedido registrado com sucesso! O chatbot agora pode ver este pedido.'}), 201
+        return jsonify({'success': 'Pedido registrado! O chatbot já está ciente deste novo pedido.'}), 201
 
     except psycopg2.errors.UndefinedTable:
         print(f"❌ ERRO em /api/registrar_pedido: A tabela 'grafica' não existe.")
@@ -259,8 +263,6 @@ def registrar_pedido():
 
 # --- Execução do App ---
 if __name__ == '__main__':
-    # Render usa a variável PORT, senão usa 5000 localmente
     port = int(os.environ.get("PORT", 5000))
-    # debug=False é importante para produção no Render
-    # use_reloader=False evita que o Render reinicie o worker constantemente
     app.run(host="0.0.0.0", port=port, debug=False, use_reloader=False)
+

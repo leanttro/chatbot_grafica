@@ -5,516 +5,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teclabel - Configuração de Pedidos</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', 'Roboto', sans-serif;
-            /* background: #fafafa; */ /* Removido o fundo estático */
-            color: #1a1a1a;
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-
-            /* Novo fundo animado */
+            color: #1a1a1a; line-height: 1.6; -webkit-font-smoothing: antialiased;
             background: linear-gradient(-45deg, #fafafa, #f4f6f9, #ffffff, #f0f2f5);
-            background-size: 400% 400%;
-            animation: animateBackground 15s ease infinite;
+            background-size: 400% 400%; animation: animateBackground 15s ease infinite;
         }
-
-        /* Nova animação de fundo */
-        @keyframes animateBackground {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        header {
-            background: #ffffff;
-            padding: 1.5rem 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .logo-container img {
-            height: 40px;
-            transition: transform 0.3s ease;
-        }
-
-        .logo-container img:hover {
-            transform: scale(1.02);
-        }
-
-        main {
-            max-width: 800px;
-            margin: 2rem auto; /* Diminuída a margem do topo para subir */
-            padding: 0 2rem;
-        }
-
-        /* Novo estilo para o logo principal */
-        .main-logo {
-            height: 140px; /* Aumentado de 100px para 140px */
-            margin-bottom: 1.5rem;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.05)); /* Adiciona destaque */
-            transition: transform 0.3s ease;
-        }
-        .main-logo:hover {
-            transform: scale(1.03); /* Efeito de zoom sutil */
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 800; /* Aumentado de 600 para 800 (mais bold) */
-            color: #022c71; /* Cor alterada */
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.02em;
-            text-align: center; /* Centralizado */
-        }
-
-        .subtitle {
-            font-size: 1.125rem;
-            color: #666;
-            margin-bottom: 3rem;
-            font-weight: 400;
-            text-align: center; /* Centralizado */
-        }
-
-        .form-container {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 3rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02), 0 1px 3px rgba(0,0,0,0.04);
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        label {
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: #1a1a1a;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        input, select {
-            padding: 0.875rem 1rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-family: inherit;
-            background: #fafafa;
-            transition: all 0.2s ease;
-            color: #1a1a1a;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: #022c71; /* Cor alterada */
-            background: #ffffff;
-            box-shadow: 0 0 0 3px rgba(2, 44, 113, 0.1); /* Cor alterada */
-        }
-
-        select {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%231a1a1a' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            padding-right: 2.5rem;
-        }
-
-        input::placeholder {
-            color: #999;
-        }
-
-        .value-display {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: #f5f5f5;
-            border-radius: 8px;
-            margin-top: 0.5rem;
-        }
-
-        .value-display .unit-value {
-            font-size: 0.875rem;
-            color: #666;
-        }
-
-        .unit-value span {
-            font-weight: 600;
-            color: #022c71; /* Cor alterada */
-            font-size: 1rem;
-        }
-
-        button[type="submit"] {
-            width: 100%;
-            padding: 1rem 2rem;
-            background: #022c71; /* Cor alterada */
-            color: #ffffff;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin-top: 1.5rem;
-            letter-spacing: 0.02em;
-        }
-
-        button[type="submit"]:hover {
-            background: #011f4b; /* Tom mais escuro da nova cor */
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(2, 44, 113, 0.3); /* Cor alterada */
-        }
-
-        button[type="submit"]:active {
-            transform: translateY(0);
-        }
-
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            display: none;
-            animation: slideIn 0.3s ease;
-        }
-
-        .success-message.show {
-            display: block;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
+        @keyframes animateBackground { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        header { background: #ffffff; padding: 1.5rem 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04); position: sticky; top: 0; z-index: 100; }
+        .logo-container { max-width: 1200px; margin: 0 auto; text-align: center; }
+        .logo-container img { height: 40px; transition: transform 0.3s ease; }
+        .logo-container img:hover { transform: scale(1.02); }
+        main { max-width: 800px; margin: 2rem auto; padding: 0 1rem; } /* Ajustado padding para mobile */
+        .main-logo { height: 140px; margin-bottom: 1.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.05)); transition: transform 0.3s ease; display: block; margin-left: auto; margin-right: auto; } /* Garantir centralização e display block */
+        .main-logo:hover { transform: scale(1.03); }
+        h1 { font-size: 2.2rem; font-weight: 800; color: #022c71; margin-bottom: 0.5rem; letter-spacing: -0.02em; text-align: center; } /* Ajustado tamanho para mobile */
+        .subtitle { font-size: 1.1rem; color: #666; margin-bottom: 2.5rem; font-weight: 400; text-align: center; } /* Ajustado tamanho e margem */
+        .form-container { background: #ffffff; border-radius: 16px; padding: 2.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.02), 0 1px 3px rgba(0,0,0,0.04); }
+        .form-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.5rem; } /* Coluna única por padrão */
+        @media (min-width: 600px) { .form-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; } } /* Duas colunas em telas maiores */
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        label { font-size: 0.8rem; font-weight: 600; color: #333; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; } /* Ajustado tamanho e cor */
+        input, select { padding: 0.8rem 1rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.95rem; font-family: inherit; background: #f9fafb; transition: all 0.2s ease; color: #1a1a1a; width: 100%; /* Garantir largura total */ } /* Ajustado padding, borda, tamanho fonte, bg */
+        input:focus, select:focus { outline: none; border-color: #022c71; background: #ffffff; box-shadow: 0 0 0 3px rgba(2, 44, 113, 0.1); }
+        select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%234b5563' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; } /* Cor da seta ajustada */
+        input::placeholder { color: #9ca3af; } /* Cor do placeholder ajustada */
+        .value-display { display: flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1rem; background: #f3f4f6; border-radius: 8px; margin-top: 0.5rem; } /* Ajustado padding e background */
+        .value-display .unit-value { font-size: 0.8rem; color: #4b5563; } /* Cor ajustada */
+        .unit-value span { font-weight: 600; color: #022c71; font-size: 0.95rem; } /* Tamanho ajustado */
+        button[type="submit"] { width: 100%; padding: 0.9rem 2rem; background: #022c71; color: #ffffff; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; margin-top: 1rem; letter-spacing: 0.02em; } /* Ajustado padding, tamanho fonte, margem */
+        button[type="submit"]:hover { background: #011f4b; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(2, 44, 113, 0.3); }
+        button[type="submit"]:active { transform: translateY(0); }
+        .success-message { background: #e0f2fe; color: #0c4a6e; padding: 0.9rem 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; display: none; animation: slideIn 0.3s ease; border: 1px solid #bae6fd; } /* Ajustado cores, padding, borda */
+        .success-message.show { display: block; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         /* Chatbot */
-        .chat-button {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 60px;
-            height: 60px;
-            background: #022c71; /* Cor alterada */
-            border: none;
-            border-radius: 50%;
-            color: #ffffff;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            transition: all 0.3s ease;
-            z-index: 1000;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.08);
-            }
-        }
-
-        .chat-button:hover {
-            background: #011f4b; /* Tom mais escuro da nova cor */
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-            animation: none;
-        }
-
-        .chat-bubble {
-            position: fixed;
-            bottom: 6rem;
-            right: 2rem;
-            background: #ffffff;
-            padding: 1rem 1.25rem;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            max-width: 280px;
-            z-index: 999;
-            animation: bubbleIn 0.5s ease;
-            display: none;
-        }
-
-        .chat-bubble.show {
-            display: block;
-        }
-
-        @keyframes bubbleIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .chat-bubble::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            right: 20px;
-            width: 0;
-            height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-top: 10px solid #ffffff;
-        }
-
-        .chat-bubble-text {
-            font-size: 0.95rem;
-            color: #1a1a1a;
-            line-height: 1.5;
-        }
-
-        .chat-bubble-close {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background: none;
-            border: none;
-            color: #999;
-            font-size: 1.25rem;
-            cursor: pointer;
-            padding: 0;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 4px;
-            transition: all 0.2s ease;
-        }
-
-        .chat-bubble-close:hover {
-            background: #f0f0f0;
-            color: #666;
-        }
-
-        .chat-window {
-            position: fixed;
-            bottom: 5rem;
-            right: 2rem;
-            width: 380px;
-            height: 500px;
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            z-index: 999;
-            animation: slideUp 0.3s ease;
-        }
-
-        .chat-window.show {
-            display: flex;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .chat-header {
-            background: #022c71; /* Cor alterada */
-            color: #ffffff;
-            padding: 1rem 1.5rem;
-            font-weight: 600;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .chat-close {
-            background: none;
-            border: none;
-            color: #ffffff;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 4px;
-            transition: background 0.2s ease;
-        }
-
-        .chat-close:hover {
-            background: rgba(255,255,255,0.1);
-        }
-
-        .chat-messages {
-            flex: 1;
-            padding: 1.5rem;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .message {
-            max-width: 80%;
-            padding: 0.75rem 1rem;
-            border-radius: 12px;
-            animation: messageIn 0.3s ease;
-        }
-
-        @keyframes messageIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .message.bot {
-            background: #f0f0f0;
-            color: #1a1a1a;
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-        }
-
-        .message.user {
-            background: #022c71; /* Cor alterada */
-            color: #ffffff;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
-
-        .chat-input-container {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid #e0e0e0;
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .chat-input-container input {
-            flex: 1;
-            border: 1px solid #e0e0e0;
-            padding: 0.75rem 1rem;
-            border-radius: 24px;
-            background: #fafafa;
-        }
-
-        .chat-input-container button {
-            background: #022c71; /* Cor alterada */
-            color: #ffffff;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 24px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.2s ease;
-        }
-
-        .chat-input-container button:hover {
-            background: #011f4b; /* Tom mais escuro da nova cor */
-        }
-
+        .chat-button { position: fixed; bottom: 1.5rem; right: 1.5rem; width: 56px; height: 56px; background: #022c71; border: none; border-radius: 50%; color: #ffffff; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.3s ease; z-index: 1000; animation: pulse 2s infinite; display: flex; align-items: center; justify-content: center; } /* Ajustado tamanho, posição, display */
+        @keyframes pulse { 0%, 100% { transform: scale(1); box-shadow: 0 4px 12px rgba(0,0,0,0.15); } 50% { transform: scale(1.08); box-shadow: 0 6px 20px rgba(2, 44, 113, 0.4); } }
+        .chat-button:hover { background: #011f4b; transform: scale(1.05); box-shadow: 0 6px 20px rgba(0,0,0,0.2); animation: none; }
+        .chat-bubble { position: fixed; bottom: 5.5rem; right: 1.5rem; background: #ffffff; padding: 0.8rem 1rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 250px; z-index: 999; animation: bubbleIn 0.5s ease; display: none; border: 1px solid #e5e7eb; } /* Ajustado padding, border-radius, max-width, borda */
+        .chat-bubble.show { display: block; }
+        @keyframes bubbleIn { from { opacity: 0; transform: translateY(10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .chat-bubble::after { content: ''; position: absolute; bottom: -7px; right: 18px; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 8px solid #ffffff; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.05)); } /* Ajustado tamanho e sombra */
+        .chat-bubble-text { font-size: 0.85rem; color: #374151; line-height: 1.5; } /* Ajustado tamanho e cor */
+        .chat-bubble-close { position: absolute; top: 0.4rem; right: 0.4rem; background: none; border: none; color: #9ca3af; font-size: 1.1rem; cursor: pointer; padding: 0; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 4px; transition: all 0.2s ease; } /* Ajustado tamanho, cor */
+        .chat-bubble-close:hover { background: #f3f4f6; color: #6b7280; }
+        .chat-window { position: fixed; bottom: 5rem; right: 1.5rem; width: 360px; height: 480px; background: #ffffff; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); display: none; flex-direction: column; overflow: hidden; z-index: 999; animation: slideUp 0.3s ease; border: 1px solid #e5e7eb; } /* Ajustado tamanho, borda */
+        .chat-window.show { display: flex; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .chat-header { background: #022c71; color: #ffffff; padding: 0.9rem 1.2rem; font-weight: 600; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center; } /* Ajustado padding, tamanho fonte */
+        .chat-close { background: none; border: none; color: #ffffff; opacity: 0.8; font-size: 1.4rem; cursor: pointer; padding: 0; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 4px; transition: all 0.2s ease; } /* Ajustado tamanho, opacidade */
+        .chat-close:hover { background: rgba(255,255,255,0.1); opacity: 1; }
+        .chat-messages { flex: 1; padding: 1.2rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.8rem; background-color: #f9fafb; } /* Ajustado padding, gap, background */
+        .message { max-width: 85%; padding: 0.7rem 0.9rem; border-radius: 10px; animation: messageIn 0.3s ease; font-size: 0.9rem; line-height: 1.5; } /* Ajustado padding, border-radius, tamanho fonte */
+        @keyframes messageIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .message.bot { background: #e5e7eb; color: #1f2937; align-self: flex-start; border-bottom-left-radius: 4px; } /* Cor ajustada */
+        .message.user { background: #1d4ed8; color: #ffffff; align-self: flex-end; border-bottom-right-radius: 4px; } /* Cor ajustada para azul mais claro */
+        .chat-input-container { padding: 0.8rem 1.2rem; border-top: 1px solid #e5e7eb; display: flex; gap: 0.5rem; background-color: #ffffff; } /* Ajustado padding, gap, borda */
+        .chat-input-container input { flex: 1; border: 1px solid #d1d5db; padding: 0.7rem 1rem; border-radius: 20px; background: #f9fafb; font-size: 0.9rem; } /* Ajustado padding, tamanho fonte */
+        .chat-input-container button { background: #022c71; color: #ffffff; border: none; padding: 0.7rem 1.2rem; border-radius: 20px; cursor: pointer; font-weight: 500; font-size: 0.9rem; transition: background 0.2s ease; } /* Ajustado padding, tamanho fonte */
+        .chat-input-container button:hover { background: #011f4b; }
         @media (max-width: 768px) {
-            main {
-                margin: 2rem auto;
-                padding: 0 1rem;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            .form-container {
-                padding: 2rem 1.5rem;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .chat-window {
-                width: calc(100% - 2rem);
-                right: 1rem;
-                left: 1rem;
-            }
-
-            .chat-button {
-                bottom: 1.5rem;
-                right: 1.5rem;
-            }
+             main { margin: 1.5rem auto; padding: 0 1rem; } /* Margem mobile */
+            .form-container { padding: 1.5rem; } /* Padding mobile */
+            h1 { font-size: 1.8rem; } .subtitle { font-size: 1rem; margin-bottom: 2rem; }
+            .chat-window { width: calc(100% - 2rem); right: 1rem; left: 1rem; bottom: 4.5rem; height: calc(100% - 6rem); max-height: 450px; } /* Ajuste chat mobile */
+            .chat-button { bottom: 1rem; right: 1rem; width: 50px; height: 50px; font-size: 1.2rem; } /* Ajuste botão mobile */
+            .chat-bubble { bottom: 4.5rem; right: 1rem; max-width: calc(100% - 2rem); } /* Ajuste balão mobile */
+            .main-logo { height: 120px; } /* Logo mobile */
         }
+
     </style>
 </head>
 <body>
-    <!-- <header>
-        <div class="logo-container">
-        </div>
-    </header> --> <!-- Cabeçalho removido (comentado) -->
 
     <main>
-        <div style="text-align: center; margin-bottom: 0.5rem;"> <!-- Alterado de 1rem para 0.5rem -->
-            <!-- Estilo inline removido e classe aplicada -->
-            <img src="logo.png" alt="Logo" class="main-logo">
+        <div style="text-align: center; margin-bottom: 0.5rem;">
+            <!-- CORREÇÃO: Adicionada a barra '/' no início do src -->
+            <img src="/logo.png" alt="Logo Teclabel" class="main-logo">
         </div>
         <h1>CADASTRO DE PEDIDO</h1>
-        <p class="subtitle">Preencha os campos abaixo para registrar o pedido.</p>
+        <p class="subtitle">Configure as especificações do seu produto.</p>
 
-        <div id="successMessage" class="success-message">
-            ✓ Configuração enviada com sucesso!
+        <div id="successMessage" class="success-message" style="display: none;">
+             Pedido registrado com sucesso! O chatbot foi atualizado com este registro.
         </div>
 
         <div class="form-container">
@@ -522,13 +98,13 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="quantidade">Quantidade</label>
-                        <input type="number" id="quantidade" name="quantidade" required min="1">
+                        <input type="number" id="quantidade" name="quantidade" required min="1" placeholder="Ex: 1000">
                     </div>
 
                     <div class="form-group">
                         <label for="produto">Produto</label>
                         <select id="produto" name="produto" required>
-                            <option value="">Selecione</option>
+                            <option value="" disabled selected>Selecione o produto</option>
                             <option value="Etiqueta Adesiva">Etiqueta Adesiva</option>
                             <option value="Rótulo Personalizado">Rótulo Personalizado</option>
                             <option value="Lacre de Segurança VOID">Lacre de Segurança VOID</option>
@@ -546,7 +122,7 @@
                     <div class="form-group">
                         <label for="material">Material</label>
                         <select id="material" name="material">
-                            <option value="">Selecione</option>
+                            <option value="" disabled selected>Selecione o material</option>
                             <option value="Vinil Branco">Vinil Branco</option>
                             <option value="BOPP Transparente">BOPP Transparente</option>
                             <option value="Poliéster Prata Fosco">Poliéster Prata Fosco</option>
@@ -563,7 +139,7 @@
                     <div class="form-group">
                         <label for="impressao">Impressão</label>
                         <select id="impressao" name="impressao">
-                            <option value="">Selecione</option>
+                            <option value="" disabled selected>Tipo de impressão</option>
                             <option value="4x0 Cores">4x0 Cores</option>
                             <option value="1x0 Cor (Preto)">1x0 Cor (Preto)</option>
                             <option value="Digital UV">Digital UV</option>
@@ -585,7 +161,7 @@
                     <div class="form-group">
                         <label for="tipoCorte">Tipo de Corte</label>
                         <select id="tipoCorte" name="tipoCorte">
-                            <option value="">Selecione</option>
+                            <option value="" disabled selected>Selecione o corte</option>
                             <option value="Corte Reto">Corte Reto</option>
                             <option value="Corte Especial (Faca)">Corte Especial (Faca)</option>
                             <option value="Meio Corte">Meio Corte</option>
@@ -596,7 +172,7 @@
                     <div class="form-group">
                         <label for="acabamento">Acabamento</label>
                         <select id="acabamento" name="acabamento">
-                            <option value="">Selecione</option>
+                            <option value="" disabled selected>Selecione o acabamento</option>
                             <option value="Sem Acabamento">Sem Acabamento</option>
                             <option value="Laminação Fosca BOPP">Laminação Fosca BOPP</option>
                             <option value="Verniz UV Localizado">Verniz UV Localizado</option>
@@ -609,7 +185,7 @@
                     <div class="form-group full-width">
                         <label for="extra">Extra</label>
                         <select id="extra" name="extra">
-                            <option value="Nenhum">Nenhum</option>
+                            <option value="Nenhum" selected>Nenhum</option>
                             <option value="Aplicação de Resina">Aplicação de Resina</option>
                             <option value="Numeração Sequencial">Numeração Sequencial</option>
                             <option value="Dados Variáveis">Dados Variáveis</option>
@@ -627,47 +203,51 @@
                     </div>
                 </div>
 
-                <button type="submit">Cadastrar Pedido</button>
+                <button type="submit" id="submitButton">Cadastrar Pedido</button>
             </form>
         </div>
     </main>
 
     <!-- Chatbot -->
-    <div class="chat-bubble" id="chatBubble">
+    <div class="chat-bubble" id="chatBubble" style="display: none;"> <!-- Inicia escondido -->
         <button class="chat-bubble-close" id="bubbleClose">×</button>
-        <div class="chat-bubble-text">Quer <strong>otimizar seu pedido</strong> com nossas dicas exclusivas? 💡</div>
+        <div class="chat-bubble-text">Precisa de uma <strong>estimativa rápida</strong>? Me pergunte! 💬</div>
     </div>
-    <button class="chat-button" id="chatButton">💬</button>
-    <div class="chat-window" id="chatWindow">
+    <button class="chat-button" id="chatButton">
+         <i class="fas fa-comment-dots"></i> <!-- Ícone adicionado -->
+    </button>
+    <div class="chat-window" id="chatWindow" style="display: none;"> <!-- Inicia escondido -->
         <div class="chat-header">
-            <span>CHATBOT ORÇAMENTISTA</span>
+            <span>GrafiBot Orçamentista</span>
             <button class="chat-close" id="chatClose">×</button>
         </div>
         <div class="chat-messages" id="chatMessages">
-            <div class="message bot">Olá! Descreva o produto que você precisa (ex: 1000 etiquetas, vinil branco, 5x5cm) e eu buscarei um valor estimado.</div>
+            <!-- NOVA MENSAGEM INICIAL -->
+            <div class="message bot">Olá! 👋 Sou o GrafiBot, seu assistente virtual da Teclabel. Estou aqui para ajudar a estimar o valor do seu próximo pedido ou consultar registros recentes. Como posso te ajudar hoje?</div>
         </div>
         <div class="chat-input-container">
-            <input type="text" id="chatInput" placeholder="Digite sua mensagem...">
+            <input type="text" id="chatInput" placeholder="Pergunte sobre um orçamento...">
             <button id="chatSend">Enviar</button>
         </div>
     </div>
 
     <script>
-        // Cálculo do Valor Unitário
+    document.addEventListener('DOMContentLoaded', () => { // Garante que o DOM está pronto
+
+        // --- LÓGICA DO FORMULÁRIO ---
         const quantidadeInput = document.getElementById('quantidade');
         const valorFinalInput = document.getElementById('valorFinal');
         const valorUnitarioDisplay = document.getElementById('valorUnitario');
+        const orderForm = document.getElementById('orderForm');
+        const successMessage = document.getElementById('successMessage');
+        const submitButton = document.getElementById('submitButton'); // Pega o botão
 
         function calcularValorUnitario() {
             const quantidade = parseFloat(quantidadeInput.value) || 0;
             const valorFinal = parseFloat(valorFinalInput.value) || 0;
-
             if (quantidade > 0 && valorFinal > 0) {
                 const valorUnitario = valorFinal / quantidade;
-                valorUnitarioDisplay.textContent = valorUnitario.toLocaleString('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL'
-                });
+                valorUnitarioDisplay.textContent = valorUnitario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             } else {
                 valorUnitarioDisplay.textContent = 'R$ 0,00';
             }
@@ -676,12 +256,11 @@
         quantidadeInput.addEventListener('input', calcularValorUnitario);
         valorFinalInput.addEventListener('input', calcularValorUnitario);
 
-        // Submissão do Formulário
-        const orderForm = document.getElementById('orderForm');
-        const successMessage = document.getElementById('successMessage');
-
-        orderForm.addEventListener('submit', function(e) {
+        orderForm.addEventListener('submit', async function(e) { // Adicionado async
             e.preventDefault();
+            submitButton.disabled = true; // Desabilita o botão
+            submitButton.textContent = 'Enviando...'; // Muda o texto do botão
+            successMessage.style.display = 'none'; // Esconde mensagem anterior
 
             const formData = {
                 quantidade: quantidadeInput.value,
@@ -696,18 +275,45 @@
                 valorFinal: valorFinalInput.value
             };
 
-            console.log('Configuração do Pedido:', formData);
+            console.log('Enviando configuração:', formData);
 
-            successMessage.classList.add('show');
-            orderForm.reset();
-            valorUnitarioDisplay.textContent = 'R$ 0,00';
+            // --- CONECTANDO AO BACKEND ---
+            try {
+                // Assume que o backend está rodando na mesma origem (Render)
+                const response = await fetch('/api/registrar_pedido', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
 
-            setTimeout(() => {
-                successMessage.classList.remove('show');
-            }, 4000);
+                const data = await response.json();
+
+                if (response.ok) {
+                    console.log('Resposta do servidor:', data);
+                    successMessage.textContent = '✓ ' + data.success; // Usa a mensagem do backend
+                    successMessage.style.display = 'block'; // Mostra a mensagem de sucesso
+                    orderForm.reset();
+                    valorUnitarioDisplay.textContent = 'R$ 0,00';
+                } else {
+                    console.error('Erro do servidor:', data.error);
+                    // Mostra erro (poderia ser um elemento na página)
+                    alert('Erro ao registrar pedido: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Erro de rede ao enviar pedido:', error);
+                alert('Erro de conexão ao tentar registrar o pedido. Verifique o console.');
+            } finally {
+                 submitButton.disabled = false; // Reabilita o botão
+                 submitButton.textContent = 'Cadastrar Pedido'; // Restaura o texto
+                 // Esconde a mensagem de sucesso após 5 segundos
+                 setTimeout(() => {
+                    successMessage.style.display = 'none';
+                 }, 5000);
+            }
+            // --- FIM DA CONEXÃO AO BACKEND ---
         });
 
-        // Chatbot
+        // --- LÓGICA DO CHATBOT ---
         const chatButton = document.getElementById('chatButton');
         const chatBubble = document.getElementById('chatBubble');
         const bubbleClose = document.getElementById('bubbleClose');
@@ -717,116 +323,141 @@
         const chatSend = document.getElementById('chatSend');
         const chatMessages = document.getElementById('chatMessages');
 
-        // Mensagens variadas para o balão
         const bubbleMessages = [
-            'Precisa de um <strong>orçamento rápido</strong>? Me consulte! 💰',
-            'Quer saber o <strong>preço</strong> antes de cadastrar? 📊',
-            'Consulte valores baseados em <strong>pedidos anteriores</strong>! 🎯',
-            'Pergunte sobre <strong>preços e quantidades</strong>! 💡',
-            'Precisa calcular o <strong>valor do pedido</strong>? Estou aqui! 📋'
+            'Precisa de uma <strong>estimativa rápida</strong>? Me pergunte! 💬',
+            'Quer ter uma <strong>ideia de preço</strong> antes de preencher tudo? 🤔',
+            'Consulte valores baseados em <strong>pedidos anteriores</strong>! 📊',
+            'Pergunte sobre <strong>preços, materiais e quantidades</strong>! 💡'
         ];
-
         let currentBubbleIndex = 0;
         let bubbleInterval;
         let bubbleDismissed = false;
 
         // Mostra o balão após 3 segundos
-        setTimeout(() => {
-            if (!bubbleDismissed) {
-                chatBubble.classList.add('show');
+        const bubbleTimeout = setTimeout(() => {
+            if (!bubbleDismissed && !chatWindow.style.display || chatWindow.style.display === 'none') {
+                chatBubble.style.display = 'block'; // Usar display block/none
                 startBubbleRotation();
             }
         }, 3000);
 
-        // Rotaciona as mensagens do balão a cada 8 segundos
         function startBubbleRotation() {
+            // Limpa intervalo anterior se existir
+            if(bubbleInterval) clearInterval(bubbleInterval);
+
             bubbleInterval = setInterval(() => {
-                if (!bubbleDismissed && chatBubble.classList.contains('show')) {
+                if (!bubbleDismissed && chatBubble.style.display === 'block') {
                     currentBubbleIndex = (currentBubbleIndex + 1) % bubbleMessages.length;
                     chatBubble.querySelector('.chat-bubble-text').innerHTML = bubbleMessages[currentBubbleIndex];
                 }
             }, 8000);
         }
 
-        // Fecha o balão
         bubbleClose.addEventListener('click', () => {
-            chatBubble.classList.remove('show');
+            chatBubble.style.display = 'none';
             bubbleDismissed = true;
             clearInterval(bubbleInterval);
+            clearTimeout(bubbleTimeout); // Cancela o aparecimento inicial se fechado antes
         });
 
-        // Abre o chat e fecha o balão
         chatButton.addEventListener('click', () => {
-            chatWindow.classList.add('show');
+            chatWindow.style.display = 'flex'; // Usar display flex/none
             chatButton.style.display = 'none';
-            chatBubble.classList.remove('show');
+            chatBubble.style.display = 'none';
             bubbleDismissed = true;
             clearInterval(bubbleInterval);
+            clearTimeout(bubbleTimeout);
+            chatInput.focus(); // Foca no input ao abrir
         });
 
-        // Também abre o chat ao clicar no balão
         chatBubble.addEventListener('click', (e) => {
-            if (e.target !== bubbleClose) {
-                chatWindow.classList.add('show');
-                chatButton.style.display = 'none';
-                chatBubble.classList.remove('show');
-                bubbleDismissed = true;
-                clearInterval(bubbleInterval);
+            // Só abre se não clicar no botão de fechar
+            if (!bubbleClose.contains(e.target)) {
+                 chatWindow.style.display = 'flex';
+                 chatButton.style.display = 'none';
+                 chatBubble.style.display = 'none';
+                 bubbleDismissed = true;
+                 clearInterval(bubbleInterval);
+                 clearTimeout(bubbleTimeout);
+                 chatInput.focus();
             }
         });
 
         chatClose.addEventListener('click', () => {
-            chatWindow.classList.remove('show');
-            chatButton.style.display = 'block';
-            // Reativa o balão depois de 15 segundos
+            chatWindow.style.display = 'none';
+            chatButton.style.display = 'flex'; // Garantir que volte como flex
+            bubbleDismissed = false; // Permite que o balão volte a aparecer
+            // Reativa o balão depois de 10 segundos
             setTimeout(() => {
-                if (!chatWindow.classList.contains('show')) {
-                    bubbleDismissed = false;
-                    chatBubble.classList.add('show');
+                if (!chatWindow.style.display || chatWindow.style.display === 'none') {
+                    chatBubble.querySelector('.chat-bubble-text').innerHTML = bubbleMessages[currentBubbleIndex]; // Reseta msg
+                    chatBubble.style.display = 'block';
                     startBubbleRotation();
                 }
-            }, 15000);
+            }, 10000);
         });
 
         function addMessage(text, isUser) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
-            messageDiv.textContent = text;
+            // Convertendo quebras de linha para <br> para exibir corretamente
+            messageDiv.innerHTML = text.replace(/\n/g, '<br>');
             chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            // Scroll suave para a última mensagem
+            chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
         }
 
-        function sendMessage() {
+        async function sendMessage() { // Adicionado async
             const message = chatInput.value.trim();
-            if (message) {
-                addMessage(message, true);
-                chatInput.value = '';
+            if (!message) return;
 
-                setTimeout(() => {
-                    const responses = [
-                        'Entendo sua necessidade. Posso ajudar com mais detalhes sobre nossos produtos.',
-                        'Para esse tipo de pedido, recomendo verificar as especificações técnicas.',
-                        'Ótima escolha! Esse material é ideal para aplicações industriais.',
-                        'Posso fornecer mais informações sobre prazos e valores. Como posso ajudar?'
-                    ];
-                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                    addMessage(randomResponse, false);
-                }, 1000);
+            addMessage(message, true);
+            chatInput.value = '';
+            chatSend.disabled = true; // Desabilita botão enquanto espera
+            chatSend.textContent = '...'; // Indica carregando
+
+             // --- CONECTANDO AO BACKEND DO CHATBOT ---
+            try {
+                // Assume que o backend está na mesma origem
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.reply) {
+                    addMessage(data.reply, false);
+                } else {
+                    addMessage(data.error || 'Desculpe, não consegui processar agora.', false);
+                    console.error("Erro da API do Chat:", data.error || "Resposta inválida");
+                }
+            } catch (error) {
+                addMessage('Erro de conexão com o assistente. Tente novamente.', false);
+                console.error("Erro de rede no Chat:", error);
+            } finally {
+                 chatSend.disabled = false; // Reabilita botão
+                 chatSend.textContent = 'Enviar'; // Restaura texto
             }
+             // --- FIM DA CONEXÃO AO BACKEND DO CHATBOT ---
         }
 
         chatSend.addEventListener('click', sendMessage);
         chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' && !e.shiftKey) { // Envia com Enter, permite Shift+Enter para nova linha
+                e.preventDefault(); // Evita nova linha no input
                 sendMessage();
             }
         });
+
+        // Adiciona ícone Font Awesome ao botão do chat (requer Font Awesome carregado no <head>, já está)
+        const chatButtonIcon = document.createElement('i');
+        chatButtonIcon.className = 'fas fa-comment-dots';
+        chatButton.innerHTML = ''; // Limpa o texto '💬'
+        chatButton.appendChild(chatButtonIcon);
+
+    }); // Fim do DOMContentLoaded
     </script>
 </body>
 </html>
-
-
-
-
-
-
