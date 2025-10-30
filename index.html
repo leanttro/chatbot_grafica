@@ -12,14 +12,10 @@
             color: #1a1a1a; line-height: 1.6; -webkit-font-smoothing: antialiased;
             background: linear-gradient(-45deg, #fafafa, #f4f6f9, #ffffff, #f0f2f5);
             background-size: 400% 400%; animation: animateBackground 15s ease infinite;
+            /* Início da Alteração 2: Travar rolagem horizontal */
+            overflow-x: hidden;
+            /* Fim da Alteração 2 */
         }
-        
-        /* *** ALTERAÇÃO SOLICITADA 1: TRAVAR TELA PARA ROLAGEM HORIZONTAL *** */
-        body, html {
-            overflow-x: hidden; /* Desativa a rolagem horizontal em toda a página */
-        }
-        /* *** FIM DA ALTERAÇÃO 1 *** */
-
         @keyframes animateBackground { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         header { background: #ffffff; padding: 1.5rem 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04); position: sticky; top: 0; z-index: 100; }
         .logo-container { max-width: 1200px; margin: 0 auto; text-align: center; }
@@ -29,11 +25,6 @@
         .main-logo { height: 140px; margin-bottom: 1.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.05)); transition: transform 0.3s ease; display: block; margin-left: auto; margin-right: auto; } /* Garantir centralização e display block */
         .main-logo:hover { transform: scale(1.03); }
         h1 { font-size: 2.2rem; font-weight: 800; color: #022c71; margin-bottom: 0.5rem; letter-spacing: -0.02em; text-align: center; } /* Ajustado tamanho para mobile */
-        /* *** ALTERAÇÃO SOLICITADA 2: FORÇAR QUEBRA DE LINHA NO TÍTULO EM MOBILE (ESCONDER <br> NO DESKTOP) *** */
-        h1 br { 
-            display: none; /* Esconde a tag <br> por padrão (desktop) */
-        }
-        /* *** FIM DA ALTERAÇÃO 2 *** */
         .subtitle { font-size: 1.1rem; color: #666; margin-bottom: 2.5rem; font-weight: 400; text-align: center; } /* Ajustado tamanho e margem */
         .form-container { background: #ffffff; border-radius: 16px; padding: 2.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.02), 0 1px 3px rgba(0,0,0,0.04); }
         .form-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.5rem; } /* Coluna única por padrão */
@@ -83,16 +74,14 @@
         @media (max-width: 768px) {
              main { margin: 1.5rem auto; padding: 0 1rem; } /* Margem mobile */
             .form-container { padding: 1.5rem; } /* Padding mobile */
-            h1 { font-size: 1.8rem; } .subtitle { font-size: 1rem; margin-bottom: 2rem; }
+            /* Início da Alteração 1: Quebra de linha no H1 */
+            h1 { font-size: 1.8rem; white-space: pre-line; } 
+            /* Fim da Alteração 1 */
+            .subtitle { font-size: 1rem; margin-bottom: 2rem; }
             .chat-window { width: calc(100% - 2rem); right: 1rem; left: 1rem; bottom: 4.5rem; height: calc(100% - 6rem); max-height: 450px; } /* Ajuste chat mobile */
             .chat-button { bottom: 1rem; right: 1rem; width: 50px; height: 50px; font-size: 1.2rem; } /* Ajuste botão mobile */
             .chat-bubble { bottom: 4.5rem; right: 1rem; max-width: calc(100% - 2rem); } /* Ajuste balão mobile */
             .main-logo { height: 120px; } /* Logo mobile */
-            /* *** ALTERAÇÃO SOLICITADA 2: FORÇAR QUEBRA DE LINHA NO TÍTULO EM MOBILE (MOSTRAR <br>) *** */
-            h1 br {
-                display: block; /* Mostra a quebra de linha em telas <= 768px */
-            }
-            /* *** FIM DA ALTERAÇÃO 2 *** */
         }
 
     </style>
@@ -103,7 +92,7 @@
         <div style="text-align: center; margin-bottom: 0.5rem;">
             <img src="/logo.png" alt="Logo Teclabel" class="main-logo">
         </div>
-        <h1>CADASTRO DE<br>ORÇAMENTO</h1>
+        <h1>CADASTRO DE&#10;ORÇAMENTO</h1>
         <p class="subtitle">Configure as especificações do seu produto.</p>
 
         <div id="successMessage" class="success-message" style="display: none;">
