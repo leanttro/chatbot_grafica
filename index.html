@@ -92,8 +92,9 @@
 
     <main>
         <div style="text-align: center; margin-bottom: 0.5rem;">
-            <!-- ALTERADO: Removido "Teclabel" do alt text -->
-            <img src="/logo.png" alt="Logo" class="main-logo">
+            <!-- ALTERADO: Adicionado '?v=2' ao nome do arquivo. -->
+            <!-- Isso força o navegador a baixar a nova versão do logo (técnica de "cache busting") -->
+            <img src="/logo.png?v=2" alt="Logo" class="main-logo">
         </div>
         <h1>CADASTRO DE&#10;ORÇAMENTO</h1>
         <p class="subtitle">Configure as especificações do seu produto.</p>
@@ -475,3 +476,4 @@
     </script>
 </body>
 </html>
+
